@@ -22,16 +22,55 @@ import com.intellij.codeInsight.TargetElementUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiReference
+import com.intellij.util.BitUtil
+import org.jetbrains.kotlin.descriptors.CallableDescriptor
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptorWithSource
+import org.jetbrains.kotlin.idea.intentions.isAutoCreatedItUsage
 import org.jetbrains.kotlin.idea.references.KtDestructuringDeclarationReference
+import org.jetbrains.kotlin.idea.references.resolveMainReferenceToDescriptors
 import org.jetbrains.kotlin.psi.*
-import org.jetbrains.kotlin.psi.psiUtil.*
+import org.jetbrains.kotlin.psi.psiUtil.containingClassOrObject
+import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
+import org.jetbrains.kotlin.psi.psiUtil.getParentOfTypeAndBranch
+import org.jetbrains.kotlin.psi.psiUtil.isAbstract
+import org.jetbrains.kotlin.resolve.descriptorUtil.isExtension
+import org.jetbrains.kotlin.resolve.source.getPsi
 
 class KotlinTargetElementEvaluator : TargetElementEvaluatorEx {
+    companion object {
+        // Place caret after the open curly brace in lambda for generated 'it'
+        fun findLambdaOpenLBraceForGeneratedIt(ref: PsiReference): PsiElement? {
+            val element: PsiElement = ref.element
+            if (element.text != "it") return null
+
+            if (element !is KtNameReferenceExpression || !isAutoCreatedItUsage(element)) return null
+
+            val itDescriptor = element.resolveMainReferenceToDescriptors().singleOrNull() ?: return null
+            val descriptorWithSource = itDescriptor.containingDeclaration as? DeclarationDescriptorWithSource ?: return null
+            val lambdaExpression = descriptorWithSource.source.getPsi()?.parent as? KtLambdaExpression ?: return null
+            return lambdaExpression.leftCurlyBrace.treeNext?.psi
+        }
+
+        // Navigate to receiver element for this in extension declaration
+        fun findReceiverForThisInExtensionFunction(ref: PsiReference): PsiElement? {
+            val element: PsiElement = ref.element
+            if (element.text != "this") return null
+
+            if (element !is KtNameReferenceExpression) return null
+            val callableDescriptor = element.resolveMainReferenceToDescriptors().singleOrNull() as? CallableDescriptor ?: return null
+
+            if (!callableDescriptor.isExtension) return null
+            val callableDeclaration = callableDescriptor.source.getPsi() as? KtCallableDeclaration ?: return null
+
+            return callableDeclaration.receiverTypeReference
+        }
+    }
+
     override fun includeSelfInGotoImplementation(element: PsiElement): Boolean = !(element is KtClass && element.isAbstract())
 
     override fun getElementByReference(ref: PsiReference, flags: Int): PsiElement? {
         // prefer destructing declaration entry to its target if element name is accepted
-        if (ref is KtDestructuringDeclarationReference && flags.and(TargetElementUtil.ELEMENT_NAME_ACCEPTED) != 0) {
+        if (ref is KtDestructuringDeclarationReference && BitUtil.isSet(flags, TargetElementUtil.ELEMENT_NAME_ACCEPTED)) {
             return ref.element
         }
 
@@ -41,6 +80,11 @@ class KotlinTargetElementEvaluator : TargetElementEvaluatorEx {
             (ref.resolve() as? KtConstructor<*>)?.let {
                 return if (flags and JavaTargetElementEvaluator.NEW_AS_CONSTRUCTOR != 0) it else it.containingClassOrObject
             }
+        }
+
+        if (BitUtil.isSet(flags, TargetElementUtil.REFERENCED_ELEMENT_ACCEPTED)) {
+            return findLambdaOpenLBraceForGeneratedIt(ref) ?:
+                   findReceiverForThisInExtensionFunction(ref)
         }
 
         return null

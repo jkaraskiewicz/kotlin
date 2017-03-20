@@ -42,6 +42,24 @@ public class GotoDeclarationTestGenerated extends AbstractGotoDeclarationTest {
         doTest(fileName);
     }
 
+    @TestMetadata("itExtensionLambdaInBrackets.test")
+    public void testItExtensionLambdaInBrackets() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoDeclaration/itExtensionLambdaInBrackets.test");
+        doTest(fileName);
+    }
+
+    @TestMetadata("itInLambdaAsDefaultArgument.test")
+    public void testItInLambdaAsDefaultArgument() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoDeclaration/itInLambdaAsDefaultArgument.test");
+        doTest(fileName);
+    }
+
+    @TestMetadata("itInLambdaWithoutCall.test")
+    public void testItInLambdaWithoutCall() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoDeclaration/itInLambdaWithoutCall.test");
+        doTest(fileName);
+    }
+
     @TestMetadata("itParameterInLambda.test")
     public void testItParameterInLambda() throws Exception {
         String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoDeclaration/itParameterInLambda.test");
@@ -57,6 +75,12 @@ public class GotoDeclarationTestGenerated extends AbstractGotoDeclarationTest {
     @TestMetadata("thisExtensionLambda.test")
     public void testThisExtensionLambda() throws Exception {
         String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoDeclaration/thisExtensionLambda.test");
+        doTest(fileName);
+    }
+
+    @TestMetadata("thisInExtensionPropertyAccessor.test")
+    public void testThisInExtensionPropertyAccessor() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoDeclaration/thisInExtensionPropertyAccessor.test");
         doTest(fileName);
     }
 }

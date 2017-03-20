@@ -2,22 +2,22 @@
 interface Foo
 interface Bar
 
-fun foo(a: Foo.(Bar) -> Unit) {}
+fun foo(b: Int, a: Foo.(Bar) -> Unit) {}
 
 fun bar() {
-    foo {
+    foo(12, {
         <caret>it
-    }
+    })
 }
 
 // FILE: after.kt
 interface Foo
 interface Bar
 
-fun foo(a: Foo.(Bar) -> Unit) {}
+fun foo(b: Int, a: Foo.(Bar) -> Unit) {}
 
 fun bar() {
-    foo {<caret>
+    foo(12, {<caret>
         it
-    }
+    })
 }
