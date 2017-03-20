@@ -48,6 +48,24 @@ public class GotoTypeDeclarationTestGenerated extends AbstractGotoTypeDeclaratio
         doTest(fileName);
     }
 
+    @TestMetadata("fromFunctionDeclarationName.test")
+    public void testFromFunctionDeclarationName() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoTypeDeclaration/fromFunctionDeclarationName.test");
+        doTest(fileName);
+    }
+
+    @TestMetadata("fromFunctionDeclarationReturn.test")
+    public void testFromFunctionDeclarationReturn() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoTypeDeclaration/fromFunctionDeclarationReturn.test");
+        doTest(fileName);
+    }
+
+    @TestMetadata("fromFunctionDeclrationExtension.test")
+    public void testFromFunctionDeclrationExtension() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoTypeDeclaration/fromFunctionDeclrationExtension.test");
+        doTest(fileName);
+    }
+
     @TestMetadata("functionCall.test")
     public void testFunctionCall() throws Exception {
         String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoTypeDeclaration/functionCall.test");
@@ -66,15 +84,39 @@ public class GotoTypeDeclarationTestGenerated extends AbstractGotoTypeDeclaratio
         doTest(fileName);
     }
 
+    @TestMetadata("noParametersLambda.test")
+    public void testNoParametersLambda() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoTypeDeclaration/noParametersLambda.test");
+        doTest(fileName);
+    }
+
     @TestMetadata("thisExtensionFunction.test")
     public void testThisExtensionFunction() throws Exception {
         String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoTypeDeclaration/thisExtensionFunction.test");
         doTest(fileName);
     }
 
+    @TestMetadata("thisExtensionFunctionWithAnnotationOnReceiver.test")
+    public void testThisExtensionFunctionWithAnnotationOnReceiver() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoTypeDeclaration/thisExtensionFunctionWithAnnotationOnReceiver.test");
+        doTest(fileName);
+    }
+
+    @TestMetadata("thisExtensionFunctionWithGenericReceiver.test")
+    public void testThisExtensionFunctionWithGenericReceiver() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoTypeDeclaration/thisExtensionFunctionWithGenericReceiver.test");
+        doTest(fileName);
+    }
+
     @TestMetadata("thisExtensionLambda.test")
     public void testThisExtensionLambda() throws Exception {
         String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoTypeDeclaration/thisExtensionLambda.test");
+        doTest(fileName);
+    }
+
+    @TestMetadata("thisInExtensionPropertyAccessor.test")
+    public void testThisInExtensionPropertyAccessor() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("idea/testData/navigation/gotoTypeDeclaration/thisInExtensionPropertyAccessor.test");
         doTest(fileName);
     }
 

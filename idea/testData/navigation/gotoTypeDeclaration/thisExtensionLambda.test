@@ -10,12 +10,12 @@ fun bar() {
 }
 
 // FILE: after.kt
-interface Foo
+interface <caret>Foo
 
 fun foo(a: Foo.() -> Unit) {}
 
 fun bar() {
     foo {
-        <caret>this
+        this
     }
 }

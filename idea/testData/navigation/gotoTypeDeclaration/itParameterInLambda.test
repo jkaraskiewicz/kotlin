@@ -11,13 +11,13 @@ fun baz() {
 }
 
 // FILE: after.kt
-class Foo
+class <caret>Foo
 
 fun <T> some(a: T, f: (T) -> Unit) {}
 fun foo(a: Any) {}
 
 fun baz() {
     some(Foo()) {
-        foo(it<caret>)
+        foo(it)
     }
 }
