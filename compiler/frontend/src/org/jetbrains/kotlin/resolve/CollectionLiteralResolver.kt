@@ -21,8 +21,10 @@ import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.builtins.PrimitiveType
 import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.config.LanguageVersionSettings
+import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.diagnostics.Errors.UNSUPPORTED
 import org.jetbrains.kotlin.diagnostics.Errors.UNSUPPORTED_FEATURE
+import org.jetbrains.kotlin.incremental.components.NoLookupLocation
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.KtAnnotationEntry
 import org.jetbrains.kotlin.psi.KtClass
@@ -54,6 +56,7 @@ object CollectionLiteralResolver {
     fun resolveCollectionLiteral(collectionLiteralExpression: KtCollectionLiteralExpression,
                                  context: ExpressionTypingContext,
                                  callResolver: CallResolver,
+                                 builtIns: KotlinBuiltIns,
                                  languageVersionSettings: LanguageVersionSettings
     ): KotlinTypeInfo {
         if (!isInsideAnnotationEntryOrClass(collectionLiteralExpression)) {
@@ -62,19 +65,22 @@ object CollectionLiteralResolver {
 
         checkSupportsArrayLiterals(collectionLiteralExpression, context, languageVersionSettings)
 
-        return resolveCollectionLiteralSpecialMethod(collectionLiteralExpression, context, callResolver)
+        return resolveCollectionLiteralSpecialMethod(collectionLiteralExpression, context, callResolver, builtIns)
     }
 
     private fun resolveCollectionLiteralSpecialMethod(
             collectionLiteralExpression: KtCollectionLiteralExpression,
             context: ExpressionTypingContext,
-            callResolver: CallResolver
+            callResolver: CallResolver,
+            builtIns: KotlinBuiltIns
     ): KotlinTypeInfo {
-        val collectionLiteralCallName = getArrayFunctionCallName(context.expectedType)
         val call = CallMaker.makeCallForCollectionLiteral(collectionLiteralExpression)
-        val resolutionResults = callResolver.resolveCallWithGivenName(context, call, collectionLiteralExpression, collectionLiteralCallName)
+        val functionDescriptor = builtIns.findFunction(getArrayFunctionCallName(context.expectedType))
 
-        // TODO: check that resolved function is from package `kotlin`, otherwise report an error
+        val resolutionResults = callResolver.resolveCollectionLiteralCallWithGivenDescriptor(
+                context, collectionLiteralExpression, call, functionDescriptor)
+
+        // No single result after resolving one candidate?
         if (!resolutionResults.isSingleResult) {
             return noTypeInfo(context)
         }
@@ -83,7 +89,10 @@ object CollectionLiteralResolver {
         return createTypeInfo(resolutionResults.resultingDescriptor.returnType, context)
     }
 
-    fun checkSupportsArrayLiterals(expression: KtCollectionLiteralExpression,
+    private fun KotlinBuiltIns.findFunction(name: Name): FunctionDescriptor =
+            builtInsPackageScope.getContributedFunctions(name, NoLookupLocation.FROM_BACKEND).single()
+
+    private fun checkSupportsArrayLiterals(expression: KtCollectionLiteralExpression,
                                    context: ExpressionTypingContext,
                                    languageVersionSettings: LanguageVersionSettings
     ) {
