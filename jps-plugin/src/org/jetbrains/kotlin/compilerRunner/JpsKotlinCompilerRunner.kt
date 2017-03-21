@@ -57,7 +57,7 @@ class JpsKotlinCompilerRunner : KotlinCompilerRunner<JpsCompilerEnvironment>() {
             environment: JpsCompilerEnvironment,
             moduleFile: File
     ) {
-        val arguments = mergeBeans(commonArguments, k2jvmArguments)
+        val arguments = mergeBeans(commonArguments, k2jvmArguments, true)
         setupK2JvmArguments(moduleFile, arguments)
         withCompilerSettings(compilerSettings) {
             runCompiler(K2JVM_COMPILER, arguments, environment)
@@ -76,7 +76,7 @@ class JpsKotlinCompilerRunner : KotlinCompilerRunner<JpsCompilerEnvironment>() {
         log.debug("K2JS: common arguments: " + ArgumentUtils.convertArgumentsToStringList(commonArguments))
         log.debug("K2JS: JS arguments: " + ArgumentUtils.convertArgumentsToStringList(k2jsArguments))
 
-        val arguments = mergeBeans(commonArguments, k2jsArguments)
+        val arguments = mergeBeans(commonArguments, k2jsArguments, true)
         log.debug("K2JS: merged arguments: " + ArgumentUtils.convertArgumentsToStringList(arguments))
 
         setupK2JsArguments(outputFile, sourceFiles, libraries, arguments)
