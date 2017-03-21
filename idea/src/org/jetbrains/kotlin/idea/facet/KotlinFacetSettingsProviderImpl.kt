@@ -21,8 +21,10 @@ import org.jetbrains.kotlin.config.KotlinFacetSettings
 import org.jetbrains.kotlin.config.KotlinFacetSettingsProvider
 
 class KotlinFacetSettingsProviderImpl : KotlinFacetSettingsProvider {
-    override fun getSettings(module: Module): KotlinFacetSettings {
-        val settings = KotlinFacet.get(module)?.configuration?.settings ?: KotlinFacetSettings()
+    override fun getSettings(module: Module) = KotlinFacet.get(module)?.configuration?.settings
+
+    override fun getInitializedSettings(module: Module): KotlinFacetSettings {
+        val settings = getSettings(module) ?: KotlinFacetSettings()
         settings.initializeIfNeeded(module, null)
         return settings
     }
