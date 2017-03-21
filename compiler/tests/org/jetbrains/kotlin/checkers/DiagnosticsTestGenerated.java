@@ -2872,6 +2872,12 @@ public class DiagnosticsTestGenerated extends AbstractDiagnosticsTest {
                 doTest(fileName);
             }
 
+            @TestMetadata("IsForNonReifiedTypeParameter.kt")
+            public void testIsForNonReifiedTypeParameter() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/cast/IsForNonReifiedTypeParameter.kt");
+                doTest(fileName);
+            }
+
             @TestMetadata("IsRecursionSustainable.kt")
             public void testIsRecursionSustainable() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/cast/IsRecursionSustainable.kt");

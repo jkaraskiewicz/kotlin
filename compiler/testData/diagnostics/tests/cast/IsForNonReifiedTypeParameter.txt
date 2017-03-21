@@ -1,0 +1,5 @@
+package
+
+public fun </*0*/ T, /*1*/ R> downcastOfNonReifiedToNonReified(/*0*/ x: T?, /*1*/ y: T, /*2*/ z: R): kotlin.Unit
+public inline fun </*0*/ reified T, /*1*/ R> downcastOfNonReifiedToReified(/*0*/ z: R): kotlin.Unit
+public inline fun </*0*/ reified T, /*1*/ R> downcastOfReifiedToNonReified(/*0*/ x: T?, /*1*/ y: T, /*2*/ z: R): kotlin.Unit
