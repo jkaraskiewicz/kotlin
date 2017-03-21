@@ -89,6 +89,15 @@ Java reflection provided by `kotlin-reflect` library.
 [Sequence][kotlin.sequences.Sequence] type that represents lazily evaluated collections. Top-level functions for instantiating sequences
 and extension functions for sequences.
 
+The sequence operations can be classified into the following groups regarding their state requirements:
+
+ - _stateless_ – operations like [kotlin.sequences.Sequence.map], [kotlin.sequences.Sequence.filter], which process each element independently;
+ - _nearly stateless_ – operations which require small constant amount of state to process an element, for example [kotlin.sequences.Sequence.take] or [kotlin.sequences.Sequence.drop];
+ - _stateful_ – operations which require the significant amount of state, usually proportional to the number of elements in a sequence.
+ 
+If the sequence operation returns another sequence, which is produced lazily, it's called _lazy_, and otherwise the operation is _terminal_.
+Examples of terminal operations are [kotlin.sequences.Sequence.toList], [kotlin.sequences.Sequence.max].
+ 
 # Package kotlin.streams
 
 Utility functions for working with Java 8 [streams](https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html).
