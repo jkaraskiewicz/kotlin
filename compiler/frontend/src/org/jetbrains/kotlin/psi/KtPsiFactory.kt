@@ -383,7 +383,7 @@ class KtPsiFactory(private val project: Project) {
         return if (fqName.isRoot) null else createPackageDirective(fqName)
     }
 
-    fun createImportDirective(importPath: ImportPath): KtImportDirective {
+    fun createImportDirective(importPath: ImportPath, markGenerated: Boolean = true): KtImportDirective {
         if (importPath.fqName.isRoot) {
             throw IllegalArgumentException("import path must not be empty")
         }
@@ -396,7 +396,12 @@ class KtPsiFactory(private val project: Project) {
             importDirectiveBuilder.append(" as ").append(alias.asString())
         }
 
-        val file = createFile(importDirectiveBuilder.toString())
+        val text = importDirectiveBuilder.toString()
+        val file = if (markGenerated)
+            createFile(text)
+        else
+            PsiFileFactory.getInstance(project).createFileFromText("dummy.kt", KotlinFileType.INSTANCE, text, LocalTimeCounter.currentTime(), false, false) as KtFile
+
         return file.importDirectives.first()
     }
 
