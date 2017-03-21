@@ -16,6 +16,7 @@
 
 package org.jetbrains.kotlin.descriptors.impl;
 
+import kotlin.collections.CollectionsKt;
 import kotlin.jvm.functions.Function0;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +26,6 @@ import org.jetbrains.kotlin.descriptors.annotations.AnnotationsKt;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.resolve.DescriptorFactory;
 import org.jetbrains.kotlin.types.*;
-import org.jetbrains.kotlin.utils.CollectionsKt;
 import org.jetbrains.kotlin.utils.SmartSet;
 
 import java.util.*;
@@ -85,7 +85,7 @@ public abstract class FunctionDescriptorImpl extends DeclarationDescriptorNonRoo
             @Nullable Modality modality,
             @NotNull Visibility visibility
     ) {
-        this.typeParameters = CollectionsKt.toReadOnlyList(typeParameters);
+        this.typeParameters = CollectionsKt.toList(typeParameters);
         this.unsubstitutedValueParameters = unsubstitutedValueParameters;
         this.unsubstitutedReturnType = unsubstitutedReturnType;
         this.modality = modality;
@@ -144,7 +144,7 @@ public abstract class FunctionDescriptorImpl extends DeclarationDescriptorNonRoo
         this.isImpl = isImpl;
     }
 
-    public void setHiddenToOvercomeSignatureClash(boolean hiddenToOvercomeSignatureClash) {
+    private void setHiddenToOvercomeSignatureClash(boolean hiddenToOvercomeSignatureClash) {
         isHiddenToOvercomeSignatureClash = hiddenToOvercomeSignatureClash;
     }
 
@@ -339,7 +339,7 @@ public abstract class FunctionDescriptorImpl extends DeclarationDescriptorNonRoo
     }
 
     @Nullable
-    protected KotlinType getExtensionReceiverParameterType() {
+    private KotlinType getExtensionReceiverParameterType() {
         if (extensionReceiverParameter == null) return null;
         return extensionReceiverParameter.getType();
     }
